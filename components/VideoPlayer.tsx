@@ -6,7 +6,7 @@ interface VideoPlayerProps {
   qualities?: { [key: string]: string };
 }
 
-export default function VideoPlayer({ videoUrl, title, qualities }: VideoPlayerProps) {
+export default function VideoPlayer({ videoUrl, title }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<any>(null);
 
@@ -26,8 +26,7 @@ export default function VideoPlayer({ videoUrl, title, qualities }: VideoPlayerP
             'volume',
             'settings',
             'fullscreen'
-          ],
-          settings: ['quality', 'speed']
+          ]
         });
       }
     });
@@ -38,7 +37,7 @@ export default function VideoPlayer({ videoUrl, title, qualities }: VideoPlayerP
         playerRef.current = null;
       }
     };
-  }, [videoUrl, qualities]);
+  }, [videoUrl]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -51,9 +50,6 @@ export default function VideoPlayer({ videoUrl, title, qualities }: VideoPlayerP
           crossOrigin="anonymous"
         >
           <source src={videoUrl} type="video/mp4" />
-          {qualities && Object.entries(qualities).map(([quality, url]) => (
-            <source key={quality} src={url} type="video/mp4" size={quality.replace('p', '')} />
-          ))}
           Your browser does not support the video tag.
         </video>
       </div>
