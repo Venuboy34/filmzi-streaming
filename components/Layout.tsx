@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -7,6 +7,8 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -20,10 +22,12 @@ export default function Layout({ children }: LayoutProps) {
                 width={40}
                 height={40}
                 className="rounded-lg"
+                unoptimized
               />
               <h1 className="text-2xl font-bold text-green-500">Filmzi</h1>
             </Link>
             
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
               <Link href="/" className="hover:text-green-500 transition-colors">
                 Home
@@ -40,7 +44,66 @@ export default function Layout({ children }: LayoutProps) {
                 Join Telegram
               </a>
             </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden flex items-center justify-center w-10 h-10 rounded-md border border-green-500 hover:bg-green-500 hover:text-black transition-colors"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {mobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-green-500">
+              <nav className="flex flex-col space-y-4 pt-4">
+                <Link 
+                  href="/" 
+                  className="hover:text-green-500 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link 
+                  href="/search" 
+                  className="hover:text-green-500 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Search
+                </Link>
+                <a 
+                  href="https://t.me/filmzi2" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-green-500 text-black px-4 py-2 rounded-md hover:bg-green-400 transition-colors text-center"
+                >
+                  Join Telegram
+                </a>
+              </nav>
+            </div>
+          )}
         </div>
       </header>
 
