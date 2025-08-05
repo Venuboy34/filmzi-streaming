@@ -27,29 +27,8 @@ export default function VideoPlayer({ videoUrl, title, qualities }: VideoPlayerP
             'settings',
             'fullscreen'
           ],
-          settings: ['quality', 'speed'],
-          quality: {
-            default: '720p',
-            options: qualities ? Object.keys(qualities) : ['720p']
-          }
+          settings: ['quality', 'speed']
         });
-
-        // Handle quality changes
-        if (qualities) {
-          playerRef.current.on('qualitychange', (event: any) => {
-            const quality = event.detail.quality;
-            if (qualities[quality]) {
-              playerRef.current.source = {
-                type: 'video',
-                sources: [{
-                  src: qualities[quality],
-                  type: 'video/mp4',
-                  size: quality
-                }]
-              };
-            }
-          });
-        }
       }
     });
 
@@ -72,6 +51,9 @@ export default function VideoPlayer({ videoUrl, title, qualities }: VideoPlayerP
           crossOrigin="anonymous"
         >
           <source src={videoUrl} type="video/mp4" />
+          {qualities && Object.entries(qualities).map(([quality, url]) => (
+            <source key={quality} src={url} type="video/mp4" size={quality.replace('p', '')} />
+          ))}
           Your browser does not support the video tag.
         </video>
       </div>
