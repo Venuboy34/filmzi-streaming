@@ -1,11 +1,6 @@
 name = "filmzi-streaming"
 compatibility_date = "2024-01-15"
-compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "out"
 
 [env.production]
 name = "filmzi-streaming"
-route = { pattern = "filmzi.pages.dev", custom_domain = true }
-
-[[env.production.routes]]
-pattern = "filmzi.pages.dev/*"
-custom_domain = true
