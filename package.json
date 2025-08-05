@@ -15,7 +15,7 @@
     "plyr": "^3.7.8"
   },
   "devDependencies": {
-    "@next/eslint-config-next": "14.0.4",
+    "eslint-config-next": "14.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
