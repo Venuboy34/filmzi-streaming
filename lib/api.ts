@@ -29,29 +29,29 @@ export async function getAllMedia(): Promise<Media[]> {
   try {
     console.log('🎬 Fetching media from API...');
     
+    // Simple fetch like your bot
     const response = await fetch(`${API_BASE_URL}/media`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
+      }
     });
     
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    console.log('📡 Response status:', response.status);
+    
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log('✅ Successfully loaded', data.length, 'items');
+      
+      // Sort by ID descending (newest first) like your bot
+      return data.sort((a: Media, b: Media) => b.id - a.id);
     }
     
-    const data = await response.json();
-    console.log('✅ Successfully loaded', data.length, 'movies and shows');
-    
-    // Sort by ID descending to show newest first
-    return data.sort((a: Media, b: Media) => b.id - a.id);
+    console.error('❌ API Error:', response.status, response.statusText);
+    return [];
     
   } catch (error) {
-    console.error('❌ API Error:', error);
-    
-    // Return empty array on error - the UI will handle the empty state
+    console.error('💥 API Error:', error);
     return [];
   }
 }
@@ -64,23 +64,20 @@ export async function getMediaById(id: string | number): Promise<Media | null> {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
+      }
     });
     
-    if (!response.ok) {
-      console.error('❌ Media not found:', response.status);
-      return null;
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log('✅ Loaded:', data.title);
+      return data;
     }
     
-    const data = await response.json();
-    console.log('✅ Loaded:', data.title);
-    
-    return data;
+    console.error('❌ Media not found:', response.status);
+    return null;
     
   } catch (error) {
-    console.error('❌ Error fetching media:', error);
+    console.error('💥 Error fetching media:', error);
     return null;
   }
 }
@@ -91,27 +88,25 @@ export async function searchMedia(query: string): Promise<Media[]> {
     
     console.log('🔎 Searching for:', query);
     
-    const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`, {
+    // Use the same search approach as your bot
+    const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query.trim())}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
+      }
     });
     
-    if (!response.ok) {
-      console.error('❌ Search failed:', response.status);
-      return [];
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log('✅ Found', data.length, 'results');
+      return Array.isArray(data) ? data : [];
     }
     
-    const data = await response.json();
-    console.log('✅ Found', data.length, 'results');
-    
-    return data;
+    console.error('❌ Search failed:', response.status);
+    return [];
     
   } catch (error) {
-    console.error('❌ Search error:', error);
+    console.error('💥 Search error:', error);
     return [];
   }
 }
